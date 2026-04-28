@@ -1,0 +1,38 @@
+# Workflow name 
+name: React CI Build Pipeline
+
+# Trigger workflow when code is pushed to main
+on:
+  push:
+    branches:
+      - main
+
+# Jobs section
+jobs:
+  build-react-app:
+
+    # Runner machine provided by GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Download repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Install Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: npm ci
+
+      # Step 4: Run tests
+      - name: Run Tests
+        run: npm test -- --watchAll=false
+
+      # Step 5: Build React production app
+      - name: Build React App
+        run: npm run build
