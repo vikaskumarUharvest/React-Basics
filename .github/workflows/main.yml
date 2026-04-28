@@ -1,29 +1,32 @@
 # Workflow name
 name: React CI Build Pipeline
 
-# Trigger when code is pushed to main
+# Trigger when code is pushed to main branch
 on:
   push:
     branches:
       - main
 
 jobs:
+  # Job name
   build-react-app:
 
     # GitHub runner machine
     runs-on: ubuntu-latest
 
-    # Default directory for all run commands
+    # All run commands execute inside React app folder
     defaults:
       run:
         working-directory: counter_app
 
     steps:
-      # Step 1: Checkout repository code
+      # Step 1:
+      # Checkout repository code from GitHub
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Setup Node.js
+      # Step 2:
+      # Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,10 +34,20 @@ jobs:
           cache: npm
           cache-dependency-path: counter_app/package-lock.json
 
-      # Step 3: Install dependencies
+      # Step 3:
+      # Install project dependencies
       - name: Install Dependencies
         run: npm ci
 
-      # Step 5: Build React app
+      # Step 4:
+      # Build Vite React production app
       - name: Build React App
         run: npm run build
+
+      # Step 5:
+      # Upload generated build files as downloadable artifact
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: reactjs-build
+          path: counter_app/dist
